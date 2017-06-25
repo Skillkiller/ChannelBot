@@ -22,7 +22,7 @@ public class CreateAutoChannel implements Command {
         ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
         if(event.getGuild().getOwner().getUser().getId().equals(member.getUser().getId())) {
             if(member.getVoiceState().inVoiceChannel()) {
-                if(guildConfig.getAutoChannel().contains(member.getVoiceState().getChannel().getId())) {
+                if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(member.getVoiceState().getChannel().getId())) {
                     event.getChannel().sendMessage("Dies ist bereits ein AutoChannel").queue();
                 } else {
                     guildConfig.addAutoChannel(member.getVoiceState().getChannel().getId());

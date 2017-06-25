@@ -42,6 +42,8 @@ public class LSTVoice extends ListenerAdapter{
         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(channel.getId())) {
             GuildController controller = guild.getController();
             Channel channelNew = controller.createCopyOfChannel(channel).complete();
+            guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(channel.getPosition() + 1).queue();
+
             channelNew.getManager().setName(getNewChannelName(guild, channel.getName())).queue();
             controller.moveVoiceMember(member, guild.getVoiceChannelById(channelNew.getId())).queue();
 

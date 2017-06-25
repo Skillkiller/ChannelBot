@@ -1,7 +1,5 @@
 package de.skillkiller.channelbot.util;
 
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +59,11 @@ public class ServerConfig {
                 channelList.add(s);
             }
             return channelList;
+        } else if (channelString != null && channelString.length() > 1) {
+            channelList.add(channelString);
+            return channelList;
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -89,8 +90,12 @@ public class ServerConfig {
         for(String s: channelList) {
             builder.append(s + ",");
         }
+        String s = builder.toString();
+        if (s.length() > 1) {
+            s.substring(0, s.length() - 1);
+        }
 
-        return builder.toString().substring(0, builder.toString().length() - 1);
+        return s;
     }
 
 }

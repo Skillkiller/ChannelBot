@@ -2,6 +2,8 @@ package de.skillkiller.channelbot.core;
 
 import de.skillkiller.channelbot.commands.CommandHandler;
 import de.skillkiller.channelbot.commands.CreateAutoChannel;
+import de.skillkiller.channelbot.listeners.LSTCommand;
+import de.skillkiller.channelbot.listeners.LSTReady;
 import de.skillkiller.channelbot.listeners.LSTVoice;
 import de.skillkiller.channelbot.util.FileManager;
 import net.dv8tion.jda.core.AccountType;
@@ -45,8 +47,9 @@ public class Main {
             botBuilder.setStatus(OnlineStatus.ONLINE);
             botBuilder.setToken(config.get("token"));
 
-            botBuilder.addEventListener(new CommandHandler());
+            botBuilder.addEventListener(new LSTCommand());
             botBuilder.addEventListener(new LSTVoice());
+            botBuilder.addEventListener(new LSTReady());
 
             bot = botBuilder.buildBlocking();
         } catch (IOException e) {
