@@ -64,7 +64,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>de.skillkiller.selfbot.core.Main</mainClass>
+                            <mainClass>de.skillkiller.channelbot.core.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
