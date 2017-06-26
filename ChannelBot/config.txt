@@ -1,4 +1,4 @@
 #config.txt
 #Mon Jun 26 00:57:31 CEST 2017
-token=MzI4NjQzNzA0NjE5NDAxMjE3.DDKrVw.BGGezttH6v5CyYnUrEGL1uFOBBA
+token=Token angeben
 commandPrefix=.
