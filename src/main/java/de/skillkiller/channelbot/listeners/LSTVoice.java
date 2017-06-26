@@ -60,7 +60,7 @@ public class LSTVoice extends ListenerAdapter{
             channelNew.getManager().setName(getNewChannelName(guild, channel.getName())).queue();
             guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(getNewPostion(channel, guild)).queue();
             controller.moveVoiceMember(member, guild.getVoiceChannelById(channelNew.getId())).queue();
-
+            guildConfig.writeChannelLog("[CREATE] [" + channelNew.getId() + "] Grund: " + member.getUser().getName() + " benötigt TempChannel");
             try {
                 guildConfig.addTempChannel(channelNew.getId());
             } catch (IOException e) {
@@ -98,6 +98,7 @@ public class LSTVoice extends ListenerAdapter{
                 e.printStackTrace();
             } finally {
                 channel.delete().queue();
+                guildConfig.writeChannelLog("[DELETE] [" + channel.getId() + "] Grund: Leerer TempChannel ");
             }
         }
     }
