@@ -4,6 +4,7 @@ import de.skillkiller.channelbot.util.ServerConfig;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
@@ -38,6 +39,20 @@ public class LSTVoice extends ListenerAdapter{
         checkDelete(event.getChannelLeft(), guildConfig);
     }
 
+    @Override
+    public void onVoiceChannelDelete(VoiceChannelDeleteEvent event) {
+        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        if(guildConfig.getAutoChannel().contains(event.getChannel().getId())) {
+            try {
+                guildConfig.removeAutoChannel(event.getChannel().getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                event.getGuild().getTextChannels().get(0).sendMessage("AutoChannel ``" + event.getChannel().getName() + "`` wurde gerade gelöscht!").queue();
+            }
+        }
+    }
+
     private void checkCreate(Member member, Channel channel, ServerConfig guildConfig, Guild guild) {
         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(channel.getId())) {
             GuildController controller = guild.getController();
@@ -68,7 +83,14 @@ public class LSTVoice extends ListenerAdapter{
     }
 
     private String getNewChannelName(Guild guild, String prefix) {
-        String s = prefix + "-" + RandomString(5);
+        String s;
+
+        if (prefix.contains("Eingang")) {
+            s = prefix.replace("Eingang", RandomString(5));
+        } else {
+            s = prefix + "-" + RandomString(5);
+        }
+
         if (guild.getVoiceChannelsByName(s, true).isEmpty()) {
             return s;
         } else {
