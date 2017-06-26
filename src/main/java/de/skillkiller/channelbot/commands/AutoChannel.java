@@ -25,7 +25,7 @@ public class AutoChannel implements Command {
         ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
         if(args.length == 0) {
             EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.orange);
-            embedBuilder.addField("Verwendung!", "``" + Main.commandPrefix + "autochannel [add|remove|list]", false);
+            embedBuilder.addField("Verwendung!", "``" + Main.commandPrefix + "autochannel [add|remove|list]``", false);
             event.getChannel().sendMessage(embedBuilder.build()).queue();
         } else {
             if (args[0].equals("add")){
@@ -45,8 +45,9 @@ public class AutoChannel implements Command {
                 }
             } else if (args[0].equals("remove")) {
                 if (args.length == 1) {
-                    //TODO AutoChannel remove <ChannelID>
-
+                    EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.orange);
+                    embedBuilder.addField("Verwendung!", "``" + Main.commandPrefix + "autochannel remove [ChannelID]``", false);
+                    event.getChannel().sendMessage(embedBuilder.build()).queue();
                 } else if (args.length == 2){
                     if(event.getGuild().getOwner().getUser().getId().equals(member.getUser().getId())) {
                         if (guildConfig.getAutoChannel().contains(args[1])) {
