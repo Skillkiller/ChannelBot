@@ -58,8 +58,7 @@ public class LSTVoice extends ListenerAdapter{
             GuildController controller = guild.getController();
             Channel channelNew = controller.createCopyOfChannel(channel).complete();
             channelNew.getManager().setName(getNewChannelName(guild, channel.getName())).queue();
-            guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(channel.getPosition() + 1).queue();
-
+            guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(getNewPostion(channel, guild)).queue();
             controller.moveVoiceMember(member, guild.getVoiceChannelById(channelNew.getId())).queue();
 
             try {
@@ -68,6 +67,27 @@ public class LSTVoice extends ListenerAdapter{
                 e.printStackTrace();
             }
         }
+    }
+
+    private int getNewPostion(Channel oldChannel, Guild guild) {
+        ServerConfig guildConfig = new ServerConfig(guild.getId());
+        GuildController guildController = guild.getController();
+
+        int oldPosition = oldChannel.getPosition();
+
+        int neuPosition = 0;
+
+        for(Channel channel : guild.getVoiceChannels()) {
+            if(channel.getPosition() > oldPosition) {
+                if (!guildConfig.getTempChannel().contains(channel.getId())) {
+                    neuPosition = channel.getPosition();
+                    break;
+                }
+            }
+        }
+        return neuPosition;
+
+
     }
 
     private void checkDelete(Channel channel, ServerConfig guildConfig) {
