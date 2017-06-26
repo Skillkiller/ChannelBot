@@ -1,8 +1,7 @@
 # Created by .ignore support plugin
 
 .idea/
-ChannelBot/config.txt
-ChannelBot/guilds/*
+/ChannelBot/
 src/main/resources/
 src/test/
 target/
