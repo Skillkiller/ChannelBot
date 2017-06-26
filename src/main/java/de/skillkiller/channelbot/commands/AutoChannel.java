@@ -73,8 +73,13 @@ public class AutoChannel implements Command {
                     }
 
                     String s = builder.toString();
+
                     if (s.length() > 1) {
                         s.substring(0, s.length() - 1);
+                    }
+
+                    if(s.length() == 0) {
+                        s = "Keine AutoChannel vorhanden";
                     }
 
                     embedBuilder.addField("AutoChannel", s, false);
