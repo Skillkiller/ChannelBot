@@ -15,13 +15,18 @@ public class LSTReady extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
+        StringBuilder builder = new StringBuilder();
+        int deleted = 0;
+        System.out.println("Channelbot läuft auf:");
         for(Guild guild: event.getJDA().getGuilds()) {
+            builder.append(guild.getName() + "(O: " + guild.getOwner().getUser().getName() + ")\n");
             ServerConfig guildConfig = new ServerConfig(guild.getId());
             for (String s : guildConfig.getTempChannel()) {
                 Channel channel = guild.getVoiceChannelById(s);
 
                 if (channel != null && channel.getMembers().isEmpty()) {
                     channel.delete().queue();
+                    deleted++;
                     try {
                         guildConfig.removeTempChannel(s);
                     } catch (IOException e) {
@@ -31,5 +36,8 @@ public class LSTReady extends ListenerAdapter {
 
             }
         }
+
+        System.out.println(builder.toString().trim());
+        System.out.println("Beim Start wurden " + deleted + " leere Temp Channel gelöscht!");
     }
 }
