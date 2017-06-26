@@ -22,12 +22,13 @@ public class LSTReady extends ListenerAdapter {
 
                 if (channel != null && channel.getMembers().isEmpty()) {
                     channel.delete().queue();
+                    try {
+                        guildConfig.removeTempChannel(s);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                try {
-                    guildConfig.removeTempChannel(s);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         }
     }
