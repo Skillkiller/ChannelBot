@@ -1,7 +1,7 @@
 # Created by .ignore support plugin
 
 .idea/
-ChannelBot/
+/ChannelBot/
 src/main/resources/
 src/test/
 target/
