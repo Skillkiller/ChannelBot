@@ -3,6 +3,7 @@ package de.skillkiller.channelbot.core;
 import de.skillkiller.channelbot.commands.AutoChannel;
 import de.skillkiller.channelbot.commands.CommandHandler;
 import de.skillkiller.channelbot.commands.TempChannel;
+import de.skillkiller.channelbot.commands.UploadLog;
 import de.skillkiller.channelbot.listeners.LSTCommand;
 import de.skillkiller.channelbot.listeners.LSTReady;
 import de.skillkiller.channelbot.listeners.LSTVoice;
@@ -66,6 +67,7 @@ public class Main {
 
         CommandHandler.commands.put("autochannel", new AutoChannel());
         CommandHandler.commands.put("tempchannel", new TempChannel());
+        CommandHandler.commands.put("upload", new UploadLog());
     }
 
 }

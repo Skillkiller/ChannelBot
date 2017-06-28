@@ -58,6 +58,14 @@ public class ServerConfig {
         removeChannelList("TempChannel", channelID);
     }
 
+    public String getPastebinDevKey() {
+        if(fmConfig.get("PastebinApiKey") != null) {
+            return fmConfig.get("PastebinApiKey");
+        } else {
+            return null;
+        }
+    }
+
     public void writeChannelLog(String message) {
         BufferedWriter buff = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY.MM.dd - HH:mm:ss");
@@ -70,6 +78,14 @@ public class ServerConfig {
             e.printStackTrace();
         }
 
+    }
+
+    public File getFileChannelLog() {
+        return fChannelLog;
+    }
+
+    public File getFileConfig() {
+        return fmConfig.getFile();
     }
 
     private List<String> getChannelList(String typ) {
