@@ -1,6 +1,6 @@
 package de.skillkiller.channelbot.commands;
 
-import de.skillkiller.channelbot.util.ServerConfig;
+import de.skillkiller.channelbot.util.files.Config;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
@@ -19,7 +19,7 @@ public class TempChannel implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent event) throws ParseException, IOException {
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        Config guildConfig = new Config(event.getGuild().getId());
         if(event.getGuild().getOwner().getUser().getId().equals(event.getAuthor().getId())) {
             EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.green);
             StringBuilder builder = new StringBuilder();

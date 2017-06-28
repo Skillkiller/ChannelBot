@@ -1,6 +1,6 @@
 package de.skillkiller.channelbot.listeners;
 
-import de.skillkiller.channelbot.util.ServerConfig;
+import de.skillkiller.channelbot.util.files.Config;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -20,7 +20,7 @@ public class LSTReady extends ListenerAdapter {
         System.out.println("Channelbot läuft auf:");
         for(Guild guild: event.getJDA().getGuilds()) {
             builder.append(guild.getName() + "(O: " + guild.getOwner().getUser().getName() + ")\n");
-            ServerConfig guildConfig = new ServerConfig(guild.getId());
+            Config guildConfig = new Config(guild.getId());
             for (String s : guildConfig.getTempChannel()) {
                 Channel channel = guild.getVoiceChannelById(s);
 

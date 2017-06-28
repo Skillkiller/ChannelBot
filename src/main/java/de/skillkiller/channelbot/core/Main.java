@@ -7,7 +7,7 @@ import de.skillkiller.channelbot.commands.UploadLog;
 import de.skillkiller.channelbot.listeners.LSTCommand;
 import de.skillkiller.channelbot.listeners.LSTReady;
 import de.skillkiller.channelbot.listeners.LSTVoice;
-import de.skillkiller.channelbot.util.FileManager;
+import de.skillkiller.channelbot.util.files.FileManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -15,6 +15,7 @@ import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,9 +28,8 @@ public class Main {
     public static String commandPrefix;
 
     public static void main(String[] args) {
-        FileManager config = new FileManager("", "config.txt");
+        FileManager config = new FileManager(new File((System.getProperty("user.dir") + "/ChannelBot/" + "config.txt")));
         try {
-            config.loadFile();
             commandPrefix = config.get("commandPrefix");
             if (commandPrefix == null) {
                 commandPrefix = ".";

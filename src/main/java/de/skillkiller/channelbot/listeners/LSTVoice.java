@@ -1,6 +1,6 @@
 package de.skillkiller.channelbot.listeners;
 
-import de.skillkiller.channelbot.util.ServerConfig;
+import de.skillkiller.channelbot.util.files.Config;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -20,7 +20,7 @@ public class LSTVoice extends ListenerAdapter{
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        Config guildConfig = new Config(event.getGuild().getId());
 
         checkCreate(event.getMember(), event.getChannelJoined(), guildConfig, event.getGuild());
 
@@ -28,20 +28,20 @@ public class LSTVoice extends ListenerAdapter{
 
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        Config guildConfig = new Config(event.getGuild().getId());
         checkDelete(event.getChannelLeft(), guildConfig);
         checkCreate(event.getMember(), event.getChannelJoined(), guildConfig, event.getGuild());
     }
 
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        Config guildConfig = new Config(event.getGuild().getId());
         checkDelete(event.getChannelLeft(), guildConfig);
     }
 
     @Override
     public void onVoiceChannelDelete(VoiceChannelDeleteEvent event) {
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        Config guildConfig = new Config(event.getGuild().getId());
         if(guildConfig.getAutoChannel().contains(event.getChannel().getId())) {
             try {
                 guildConfig.removeAutoChannel(event.getChannel().getId());
@@ -53,14 +53,15 @@ public class LSTVoice extends ListenerAdapter{
         }
     }
 
-    private void checkCreate(Member member, Channel channel, ServerConfig guildConfig, Guild guild) {
+    private void checkCreate(Member member, Channel channel, Config guildConfig, Guild guild) {
         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(channel.getId())) {
             GuildController controller = guild.getController();
             Channel channelNew = controller.createCopyOfChannel(channel).complete();
             channelNew.getManager().setName(getNewChannelName(guild, channel.getName())).queue();
             guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(getNewPostion(channel, guild)).queue();
             controller.moveVoiceMember(member, guild.getVoiceChannelById(channelNew.getId())).queue();
-            guildConfig.writeChannelLog("[CREATE] [" + channelNew.getId() + "] Grund: " + member.getUser().getName() + " benötigt TempChannel");
+            //TODO Fixen
+            //guildConfig.writeChannelLog("[CREATE] [" + channelNew.getId() + "] Grund: " + member.getUser().getName() + " benötigt TempChannel");
             try {
                 guildConfig.addTempChannel(channelNew.getId());
             } catch (IOException e) {
@@ -70,7 +71,7 @@ public class LSTVoice extends ListenerAdapter{
     }
 
     private int getNewPostion(Channel oldChannel, Guild guild) {
-        ServerConfig guildConfig = new ServerConfig(guild.getId());
+        Config guildConfig = new Config(guild.getId());
         GuildController guildController = guild.getController();
 
         int oldPosition = oldChannel.getPosition();
@@ -90,7 +91,7 @@ public class LSTVoice extends ListenerAdapter{
 
     }
 
-    private void checkDelete(Channel channel, ServerConfig guildConfig) {
+    private void checkDelete(Channel channel, Config guildConfig) {
         if(guildConfig.getTempChannel() != null && guildConfig.getTempChannel().contains(channel.getId()) && channel.getMembers().isEmpty()) {
             try {
                 guildConfig.removeTempChannel(channel.getId());
@@ -98,7 +99,8 @@ public class LSTVoice extends ListenerAdapter{
                 e.printStackTrace();
             } finally {
                 channel.delete().queue();
-                guildConfig.writeChannelLog("[DELETE] [" + channel.getId() + "] Grund: Leerer TempChannel ");
+                //TODO Fixen
+                //guildConfig.writeChannelLog("[DELETE] [" + channel.getId() + "] Grund: Leerer TempChannel ");
             }
         }
     }

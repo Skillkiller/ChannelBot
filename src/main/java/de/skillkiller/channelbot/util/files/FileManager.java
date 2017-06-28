@@ -1,44 +1,41 @@
-package de.skillkiller.channelbot.util;
+package de.skillkiller.channelbot.util.files;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 /**
- * Created by Skillkiller on 25.06.2017.
+ * Created by Skillkiller on 28.06.2017.
  */
 public class FileManager {
-
 
     private String fileName;
     private Properties p;
     private File f;
 
-    public FileManager(String dir, String fileName) {
-        //Erstelle Verzeichnisse
-        File userDir = null;
-        if (!dir.startsWith(System.getProperty("user.dir"))) {
-            userDir = new File(System.getProperty("user.dir") + "/ChannelBot/" + dir);
-        } else {
-            userDir = new File(dir);
+    public FileManager(File file) {
+
+        if (!file.exists()) {
+            try {
+                new File(file.getAbsolutePath().replace(file.getName(), "")).mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        userDir.mkdirs();
-
-        this.f = new File(userDir.getAbsolutePath() + "/" + fileName);
+        this.fileName = file.getName();
+        this.f = file;
         this.p = new Properties();
-    }
 
-    public void loadFile() throws IOException {
-
-        if (!this.f.exists()) {
-            this.f.createNewFile();
+        try {
+            p.load(new FileInputStream(this.f));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        p.load(new FileInputStream(this.f));
     }
 
     public String get(String key) {
@@ -59,10 +56,6 @@ public class FileManager {
 
     public void saveFile() throws IOException {
         p.store(new FileOutputStream(f), f.getName());
-    }
-
-    public File getFile() {
-        return f;
     }
 
 

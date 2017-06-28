@@ -1,14 +1,13 @@
 package de.skillkiller.channelbot.commands;
 
 import de.skillkiller.channelbot.core.Main;
-import de.skillkiller.channelbot.util.ServerConfig;
+import de.skillkiller.channelbot.util.files.Config;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-import java.awt.Color; // Changed from java.awt.* -> java.awt.Color to implement java.utils.List
+import java.awt.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class AutoChannel implements Command {
     public void action(String[] args, GuildMessageReceivedEvent event) throws ParseException, IOException {
 
         Member member = event.getMember();
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        Config guildConfig = new Config(event.getGuild().getId());
 
         if(args.length == 0) {
             sendHelp(event);

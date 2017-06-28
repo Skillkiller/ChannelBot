@@ -1,38 +1,23 @@
-package de.skillkiller.channelbot.util;
+package de.skillkiller.channelbot.util.files;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Skillkiller on 25.06.2017.
+ * Created by Skillkiller on 28.06.2017.
  */
-public class ServerConfig {
+public class Config {
 
-    public ServerConfig(String guildID) {
-        fmConfig = new FileManager("/guilds/" + guildID + "/", "config.txt");
+    public Config(String guildID) {
+        configFile = new GuildFiles(guildID).getConfigFile();
 
-        try {
-            fmConfig.loadFile();
-            fChannelLog = new File(new FileManager("/guilds/" + guildID + "/", "ChannelLog.txt").getFile().getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.guildID = guildID;
+        this.fmConfig = new FileManager(configFile);
     }
 
-    private String guildID;
+    private File configFile;
     private FileManager fmConfig;
-    private File fChannelLog;
-
-    public FileManager getServerConfig() {
-        return fmConfig;
-    }
 
     public List<String> getAutoChannel() {
         return getChannelList("AutoChannel");
@@ -64,28 +49,6 @@ public class ServerConfig {
         } else {
             return null;
         }
-    }
-
-    public void writeChannelLog(String message) {
-        BufferedWriter buff = null;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY.MM.dd - HH:mm:ss");
-        try {
-            buff = new BufferedWriter(new FileWriter( fChannelLog.getAbsolutePath(), fChannelLog.exists()));
-            buff.write("[" + simpleDateFormat.format(new Date()) + "] " + message);
-            buff.newLine();
-            buff.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public File getFileChannelLog() {
-        return fChannelLog;
-    }
-
-    public File getFileConfig() {
-        return fmConfig.getFile();
     }
 
     private List<String> getChannelList(String typ) {

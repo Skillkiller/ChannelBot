@@ -1,10 +1,11 @@
 package de.skillkiller.channelbot.commands;
 
-import de.skillkiller.channelbot.util.ServerConfig;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -21,7 +22,8 @@ public class UploadLog implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent event) throws ParseException, IOException {
-        ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
+        /*
+        Config guildConfig = new Config(event.getGuild().getId());
         if(!event.getGuild().getOwner().getUser().getId().equals(event.getAuthor().getId())) {
             event.getChannel().sendMessage("Du bist nicht berechtigt!").queue();
             return;
@@ -81,7 +83,7 @@ public class UploadLog implements Command {
 
                 }
             }
-        }
+        }*/
     }
 
     @Override
