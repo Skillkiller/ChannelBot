@@ -1,11 +1,12 @@
 package de.skillkiller.channelbot.commands;
 
+import de.skillkiller.channelbot.util.files.Config;
+import de.skillkiller.channelbot.util.files.GuildFiles;
+import de.skillkiller.channelbot.util.files.Log;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -22,8 +23,9 @@ public class UploadLog implements Command {
 
     @Override
     public void action(String[] args, GuildMessageReceivedEvent event) throws ParseException, IOException {
-        /*
         Config guildConfig = new Config(event.getGuild().getId());
+        Log log = new Log(event.getGuild().getId());
+        GuildFiles guildFiles = new GuildFiles(event.getGuild().getId());
         if(!event.getGuild().getOwner().getUser().getId().equals(event.getAuthor().getId())) {
             event.getChannel().sendMessage("Du bist nicht berechtigt!").queue();
             return;
@@ -36,10 +38,10 @@ public class UploadLog implements Command {
             //TODO Sende Hilfe
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("channellog")) {
-                if (guildConfig.getFileChannelLog().length() / (1024*1024) > 0.5) {
+                if (log.getChannelLog().length() / (1024*1024) > 0.5) {
                     event.getChannel().sendMessage("Log zu groß für einen Upload!").queue();
                 } else {
-                    BufferedReader br = new BufferedReader(new FileReader(guildConfig.getFileChannelLog().getAbsolutePath()));
+                    BufferedReader br = new BufferedReader(new FileReader(log.getChannelLog().getAbsolutePath()));
                     try {
                         StringBuilder sb = new StringBuilder();
                         String line = br.readLine();
@@ -60,10 +62,10 @@ public class UploadLog implements Command {
                 }
 
             } else if (args[0].equalsIgnoreCase("config")) {
-                if (guildConfig.getFileConfig().length() / (1024*1024) > 0.5) {
+                if (guildFiles.getConfigFile().length() / (1024*1024) > 0.5) {
                     event.getChannel().sendMessage("Log zu groß für einen Upload!").queue();
                 } else {
-                    BufferedReader br = new BufferedReader(new FileReader(guildConfig.getFileConfig().getAbsolutePath()));
+                    BufferedReader br = new BufferedReader(new FileReader(guildFiles.getConfigFile().getAbsolutePath()));
                     try {
                         StringBuilder sb = new StringBuilder();
                         String line = br.readLine();
@@ -83,7 +85,7 @@ public class UploadLog implements Command {
 
                 }
             }
-        }*/
+        }
     }
 
     @Override

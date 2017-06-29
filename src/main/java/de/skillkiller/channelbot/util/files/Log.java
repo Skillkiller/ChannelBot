@@ -42,4 +42,8 @@ public class Log {
             e.printStackTrace();
         }
     }
+
+    public File getChannelLog() {
+        return channelLog;
+    }
 }
