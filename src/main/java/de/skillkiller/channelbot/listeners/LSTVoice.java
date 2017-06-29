@@ -59,7 +59,7 @@ public class LSTVoice extends ListenerAdapter{
         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(channel.getId())) {
             GuildController controller = guild.getController();
             try {
-                controller.setMute(member, true).queue();
+                //controller.setMute(member, true).queue();
             } catch (PermissionException ex) {
 
             }
@@ -69,7 +69,7 @@ public class LSTVoice extends ListenerAdapter{
             guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(getNewPostion(channel, guild)).queue();
             controller.moveVoiceMember(member, guild.getVoiceChannelById(channelNew.getId())).queue();
             try {
-                controller.setMute(member, false).queue();
+                //controller.setMute(member, false).queue();
             } catch (PermissionException ex) {
 
             }
