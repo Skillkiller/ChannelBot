@@ -30,7 +30,6 @@ public class LSTVoice extends ListenerAdapter{
 
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
-        Config guildConfig = new Config(event.getGuild().getId());
         checkDelete(event.getChannelLeft(), event.getGuild().getId());
         checkCreate(event.getMember(), event.getChannelJoined(), event.getGuild());
     }
