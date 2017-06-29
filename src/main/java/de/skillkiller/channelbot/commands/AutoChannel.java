@@ -1,6 +1,5 @@
 package de.skillkiller.channelbot.commands;
 
-import de.skillkiller.channelbot.core.Main;
 import de.skillkiller.channelbot.util.files.Config;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
@@ -21,8 +20,9 @@ import java.util.stream.Collectors;
 public class AutoChannel implements Command {
 
     private void sendHelp(GuildMessageReceivedEvent event) {
+        Config guildConfig = new Config(event.getGuild().getId());
         EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.orange);
-        embedBuilder.addField("Verwendung!", "``" + Main.commandPrefix + "autochannel [add|remove|list]``", false);
+        embedBuilder.addField("Verwendung!", "``" + guildConfig.getCommandPrefix() + "autochannel [add|remove|list]``", false);
         event.getChannel().sendMessage(embedBuilder.build()).queue();
     }
 
@@ -70,8 +70,8 @@ public class AutoChannel implements Command {
 
                 if (args.length == 1) {
                     EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.orange);
-                    embedBuilder.addField("Verwendung!", "``" + Main.commandPrefix + "autochannel remove [ChannelID]`` oder\n" +
-                                    "``" + Main.commandPrefix + "autochannel remove [ChannelName]``", false);
+                    embedBuilder.addField("Verwendung!", "``" + guildConfig.getCommandPrefix() + "autochannel remove [ChannelID]`` oder\n" +
+                                    "``" + guildConfig.getCommandPrefix() + "autochannel remove [ChannelName]``", false);
                     event.getChannel().sendMessage(embedBuilder.build()).queue();
                 } else if (args.length == 2){
                     if(event.getGuild().getOwner().getUser().getId().equals(member.getUser().getId())) {

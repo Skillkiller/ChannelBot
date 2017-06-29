@@ -14,6 +14,15 @@ public class Config {
         configFile = new GuildFiles(guildID).getConfigFile();
 
         this.fmConfig = new FileManager(configFile);
+
+        if(fmConfig.get("commandPrefix") == null) {
+            fmConfig.set("commandPrefix", "/");
+            try {
+                fmConfig.saveFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private File configFile;
@@ -25,6 +34,10 @@ public class Config {
 
     public void addAutoChannel(String channelID) throws IOException {
         addChannelList("AutoChannel", channelID);
+    }
+
+    public String getCommandPrefix() {
+        return fmConfig.get("commandPrefix");
     }
 
     public void removeAutoChannel(String channelID) throws IOException {

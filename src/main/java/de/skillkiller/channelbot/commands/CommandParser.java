@@ -1,7 +1,7 @@
 package de.skillkiller.channelbot.commands;
 
 
-import de.skillkiller.channelbot.core.Main;
+import de.skillkiller.channelbot.util.files.Config;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class CommandParser {
         ArrayList<String> split = new ArrayList<>();
 
         String raw = rw;
-        String beheaded = raw.replaceFirst(Main.commandPrefix, "");
+        String beheaded = raw.replaceFirst(new Config(e.getGuild().getId()).getCommandPrefix(), "");
         String[] splitBeheaded = beheaded.split(" ");
 
         for (String s : splitBeheaded) {

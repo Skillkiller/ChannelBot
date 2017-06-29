@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
@@ -25,19 +26,10 @@ public class Main {
 
     static JDA bot;
 
-    public static String commandPrefix;
 
     public static void main(String[] args) {
         FileManager config = new FileManager(new File((System.getProperty("user.dir") + "/ChannelBot/" + "config.txt")));
         try {
-            commandPrefix = config.get("commandPrefix");
-            if (commandPrefix == null) {
-                commandPrefix = ".";
-                config.set("commandPrefix", commandPrefix);
-            }
-
-
-
             if (config.get("token") == null || config.get("token").equals("Token angeben")) {
                 config.set("token", "Token angeben");
                 config.saveFile();
@@ -47,6 +39,22 @@ public class Main {
             botBuilder.setToken(config.get("token"));
             botBuilder.setAutoReconnect(true);
             botBuilder.setStatus(OnlineStatus.ONLINE);
+            botBuilder.setGame(new Game() {
+                @Override
+                public String getName() {
+                    return "Manage Channel";
+                }
+
+                @Override
+                public String getUrl() {
+                    return "Skillkiller.de";
+                }
+
+                @Override
+                public GameType getType() {
+                    return GameType.DEFAULT;
+                }
+            });
             botBuilder.setToken(config.get("token"));
 
             botBuilder.addEventListener(new LSTCommand());
