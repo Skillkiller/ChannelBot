@@ -1,6 +1,7 @@
 package de.skillkiller.channelbot.listeners;
 
 import de.skillkiller.channelbot.util.files.Config;
+import de.skillkiller.channelbot.util.files.Log;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -23,21 +24,20 @@ public class LSTVoice extends ListenerAdapter{
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         Config guildConfig = new Config(event.getGuild().getId());
 
-        checkCreate(event.getMember(), event.getChannelJoined(), guildConfig, event.getGuild());
+        checkCreate(event.getMember(), event.getChannelJoined(), event.getGuild());
 
     }
 
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
         Config guildConfig = new Config(event.getGuild().getId());
-        checkDelete(event.getChannelLeft(), guildConfig);
-        checkCreate(event.getMember(), event.getChannelJoined(), guildConfig, event.getGuild());
+        checkDelete(event.getChannelLeft(), event.getGuild().getId());
+        checkCreate(event.getMember(), event.getChannelJoined(), event.getGuild());
     }
 
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
-        Config guildConfig = new Config(event.getGuild().getId());
-        checkDelete(event.getChannelLeft(), guildConfig);
+        checkDelete(event.getChannelLeft(), event.getGuild().getId());
     }
 
     @Override
@@ -54,7 +54,9 @@ public class LSTVoice extends ListenerAdapter{
         }
     }
 
-    private void checkCreate(Member member, Channel channel, Config guildConfig, Guild guild) {
+    private void checkCreate(Member member, Channel channel, Guild guild) {
+        Config guildConfig = new Config(guild.getId());
+        Log log = new Log(guild.getId());
         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(channel.getId())) {
             GuildController controller = guild.getController();
             try {
@@ -72,8 +74,7 @@ public class LSTVoice extends ListenerAdapter{
             } catch (PermissionException ex) {
 
             }
-            //TODO Fixen
-            //guildConfig.writeChannelLog("[CREATE] [" + channelNew.getId() + "] Grund: " + member.getUser().getName() + " benötigt TempChannel");
+            log.writeChannelLog("[CREATE] [" + channelNew.getId() + "] Grund: " + member.getUser().getName() + " benötigt TempChannel");
             try {
                 guildConfig.addTempChannel(channelNew.getId());
             } catch (IOException e) {
@@ -103,7 +104,9 @@ public class LSTVoice extends ListenerAdapter{
 
     }
 
-    private void checkDelete(Channel channel, Config guildConfig) {
+    private void checkDelete(Channel channel, String guildID) {
+        Config guildConfig = new Config(guildID);
+        Log log = new Log(guildID);
         if(guildConfig.getTempChannel() != null && guildConfig.getTempChannel().contains(channel.getId()) && channel.getMembers().isEmpty()) {
             try {
                 guildConfig.removeTempChannel(channel.getId());
@@ -111,8 +114,7 @@ public class LSTVoice extends ListenerAdapter{
                 e.printStackTrace();
             } finally {
                 channel.delete().queue();
-                //TODO Fixen
-                //guildConfig.writeChannelLog("[DELETE] [" + channel.getId() + "] Grund: Leerer TempChannel ");
+                log.writeChannelLog("[DELETE] [" + channel.getId() + "] Grund: Leerer TempChannel ");
             }
         }
     }
