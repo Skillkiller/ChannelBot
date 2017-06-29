@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.managers.GuildController;
 
@@ -56,10 +57,21 @@ public class LSTVoice extends ListenerAdapter{
     private void checkCreate(Member member, Channel channel, Config guildConfig, Guild guild) {
         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(channel.getId())) {
             GuildController controller = guild.getController();
+            try {
+                controller.setMute(member, true).queue();
+            } catch (PermissionException ex) {
+
+            }
+
             Channel channelNew = controller.createCopyOfChannel(channel).complete();
             channelNew.getManager().setName(getNewChannelName(guild, channel.getName())).queue();
             guild.getController().modifyVoiceChannelPositions().selectPosition(channelNew.getPosition()).moveTo(getNewPostion(channel, guild)).queue();
             controller.moveVoiceMember(member, guild.getVoiceChannelById(channelNew.getId())).queue();
+            try {
+                controller.setMute(member, false).queue();
+            } catch (PermissionException ex) {
+
+            }
             //TODO Fixen
             //guildConfig.writeChannelLog("[CREATE] [" + channelNew.getId() + "] Grund: " + member.getUser().getName() + " benötigt TempChannel");
             try {
