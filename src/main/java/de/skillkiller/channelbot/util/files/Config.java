@@ -57,10 +57,16 @@ public class Config {
     }
 
     public String getPastebinDevKey() {
-        if(fmConfig.get("PastebinApiKey") != null) {
-            return fmConfig.get("PastebinApiKey");
-        } else {
+        String s = null;
+        try {
+            s = fmConfig.getSet("PastebinApiKey", "Key angeben");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (s != null && s.equalsIgnoreCase("Key angeben")) {
             return null;
+        } else {
+            return  s;
         }
     }
 
