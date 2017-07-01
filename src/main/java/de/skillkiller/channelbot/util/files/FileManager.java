@@ -50,6 +50,19 @@ public class FileManager {
         p.setProperty(key, value);
     }
 
+    public String getSet(String key, String defaultValue) throws IOException {
+        if(get(key) == null) {
+            System.out.println("Schreibe Default");
+            set(key, defaultValue);
+            saveFile();
+            return null;
+        } else {
+            return get(key);
+        }
+
+
+    }
+
     public Properties getProperties() {
         return p;
     }
