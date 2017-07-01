@@ -17,11 +17,17 @@ public class Config {
 
         if(fmConfig.get("commandPrefix") == null) {
             fmConfig.set("commandPrefix", "/");
-            try {
-                fmConfig.saveFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }
+
+        if(fmConfig.get("PastebinApiKey") == null) {
+            fmConfig.set("PastebinApiKey", "Key angeben");
+        }
+
+        //Speichere Datei
+        try {
+            fmConfig.saveFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
