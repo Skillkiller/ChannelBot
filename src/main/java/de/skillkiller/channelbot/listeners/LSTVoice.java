@@ -123,6 +123,8 @@ public class LSTVoice extends ListenerAdapter{
 
         if (prefix.contains("Eingang")) {
             s = prefix.replace("Eingang", RandomString(5));
+        } else if(prefix.contains("Autochannel")) {
+            s = prefix.replace("Autochannel",  RandomString(5));
         } else {
             s = prefix + "-" + RandomString(5);
         }
