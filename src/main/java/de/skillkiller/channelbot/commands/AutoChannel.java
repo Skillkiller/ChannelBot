@@ -3,6 +3,7 @@ package de.skillkiller.channelbot.commands;
 import de.skillkiller.channelbot.core.Main;
 import de.skillkiller.channelbot.util.ServerConfig;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -36,6 +37,8 @@ public class AutoChannel implements Command {
     public void action(String[] args, GuildMessageReceivedEvent event) throws ParseException, IOException {
 
         Member member = event.getMember();
+        Guild guild = event.getGuild();
+        TextChannel chan = event.getChannel();
         ServerConfig guildConfig = new ServerConfig(event.getGuild().getId());
 
         if(args.length == 0) {
@@ -48,34 +51,32 @@ public class AutoChannel implements Command {
 
             case "add":
 
-                if(event.getGuild().getOwner().getUser().getId().equals(member.getUser().getId())) {
+                if(guild.getOwner().getUser().getId().equals(member.getUser().getId())) {
                     if(member.getVoiceState().inVoiceChannel()) {
                         if(guildConfig.getAutoChannel() != null && guildConfig.getAutoChannel().contains(member.getVoiceState().getChannel().getId())) {
-                            event.getChannel().sendMessage("Dies ist bereits ein AutoChannel").queue();
+                            chan.sendMessage("Dies ist bereits ein AutoChannel").queue();
                         } else {
                             guildConfig.addAutoChannel(member.getVoiceState().getChannel().getId());
-                            event.getChannel().sendMessage("Hinzugefügt!").queue();
+                            chan.sendMessage("Hinzugefügt!").queue();
                         }
                     }else {
-                        event.getChannel().sendMessage("Du befindest dich in keinem Voice Channel").queue();
+                        chan.sendMessage("Du befindest dich in keinem Voice Channel").queue();
                     }
                 } else {
-                    event.getChannel().sendMessage("Du bist dafür nicht berechtigt!").queue();
+                    chan.sendMessage("Du bist dafür nicht berechtigt!").queue();
                 }
                 break;
 
 
             case "remove":
 
-                System.out.println(guildConfig.getAutoChannel().size());
-
                 if (args.length == 1) {
                     EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.orange);
                     embedBuilder.addField("Verwendung!", "``" + Main.commandPrefix + "autochannel remove [ChannelID]`` oder\n" +
                                     "``" + Main.commandPrefix + "autochannel remove [ChannelName]``", false);
-                    event.getChannel().sendMessage(embedBuilder.build()).queue();
+                    chan.sendMessage(embedBuilder.build()).queue();
                 } else if (args.length == 2){
-                    if(event.getGuild().getOwner().getUser().getId().equals(member.getUser().getId())) {
+                    if(guild.getOwner().getUser().getId().equals(member.getUser().getId())) {
 
 
                         /*
@@ -91,24 +92,20 @@ public class AutoChannel implements Command {
                         List<VoiceChannel> chans = new ArrayList<>();
                         event.getGuild().getVoiceChannels().stream()
                                 .filter(c -> c.getName().toLowerCase().startsWith(argsString))
-                                .forEach(c -> chans.add(c));
+                                .forEach(chans::add);
 
-                        String chanID;
-                        if (chans.size() > 0)
-                            chanID = chans.get(0).getId();
-                        else
-                            chanID = args[1];
+                        String chanID = chans.size() > 0 ? chans.get(0).getId() : args[1];
 
                         if (guildConfig.getAutoChannel().contains(chanID)) {
                             guildConfig.removeAutoChannel(chanID);
-                            event.getChannel().sendMessage("Autochannel gelöscht!").queue();
+                            chan.sendMessage("Autochannel gelöscht!").queue();
                         } else {
-                            event.getChannel().sendMessage("Dies ist kein AutoChannel").queue();
+                            chan.sendMessage("Dies ist kein AutoChannel").queue();
                         }
 
 
                     } else {
-                        event.getChannel().sendMessage("Du bist dafür nicht berechtigt!").queue();
+                        chan.sendMessage("Du bist dafür nicht berechtigt!").queue();
                     }
                 }
                 break;
@@ -127,19 +124,18 @@ public class AutoChannel implements Command {
 
                     String s = builder.toString();
 
-                    if (s.length() > 1) {
+                    if (s.length() > 1)
                         s.substring(0, s.length() - 1);
-                    }
 
-                    if(s.length() == 0) {
+                    if(s.length() == 0)
                         s = "Keine AutoChannel vorhanden";
-                    }
+
 
                     embedBuilder.addField("AutoChannel", s, false);
-                    event.getChannel().sendMessage(embedBuilder.build()).queue();
+                    chan.sendMessage(embedBuilder.build()).queue();
 
                 } else {
-                    event.getChannel().sendMessage("Du bist dafür nicht berechtigt!").queue();
+                    chan.sendMessage("Du bist dafür nicht berechtigt!").queue();
                 }
 
                 break;

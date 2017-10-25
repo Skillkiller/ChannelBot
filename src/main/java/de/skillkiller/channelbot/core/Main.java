@@ -42,27 +42,20 @@ public class Main {
                 config.saveFile();
             }
 
-            JDABuilder botBuilder = new JDABuilder(AccountType.BOT);
-            botBuilder.setToken(config.get("token"));
-            botBuilder.setAutoReconnect(true);
-            botBuilder.setStatus(OnlineStatus.ONLINE);
-            botBuilder.setToken(config.get("token"));
+            JDABuilder botBuilder = new JDABuilder(AccountType.BOT)
+                .setToken(config.get("token"))
+                .setAutoReconnect(true)
+                .setStatus(OnlineStatus.ONLINE)
+                .setToken(config.get("token"))
 
-            botBuilder.addEventListener(new LSTCommand());
-            botBuilder.addEventListener(new LSTVoice());
-            botBuilder.addEventListener(new LSTReady());
+                .addEventListener(new LSTCommand())
+                .addEventListener(new LSTVoice())
+                .addEventListener(new LSTReady());
 
             bot = botBuilder.buildBlocking();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LoginException e) {
-            e.printStackTrace();
-        } catch (RateLimitedException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | LoginException | RateLimitedException | InterruptedException e) {
             e.printStackTrace();
         }
-
 
         CommandHandler.commands.put("autochannel", new AutoChannel());
         CommandHandler.commands.put("tempchannel", new TempChannel());
